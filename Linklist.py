@@ -5,6 +5,9 @@ class Linklist:
     def __init__(self):
         self.head = None
 
+    def length_node(self, x):
+        return x.__sizeof__()
+
     def add_Forward(self, value):
         if self.head is None:
             temp = Node(value)
@@ -27,15 +30,15 @@ class Linklist:
 
     def print_LinkedList(self):
         string = ""
+        print("Linked List:", end=" ")
         if self.head is None:
-            string = "Empty"
+            print("Empty")
         else:
-            string = ""
             current = self.head
-            while current is not None:
-                string += str(current.data)+"->"
+            while current.next is not None:
+                print(current, end="->")
                 current = current.next
-        return string.strip("->")
+        print(current)
 
     def reverse_LinkedList(self):
         previous = None
@@ -47,7 +50,7 @@ class Linklist:
             previous = current
             current = future
         self.head = previous
-        return self.print_LinkedList()
+        return self.head
 
     def length_LinkedList(self):
         current = self.head
@@ -89,17 +92,59 @@ class Linklist:
                 current.next = None
                 return self.print_LinkedList()
 
+    def cycle_formation(self, pos):
+        count = 1
+        pos = pos
+        cur = ref = prev = self.head
+        while cur:
+            prev = cur
+            if count == pos:
+                ref = cur
+            cur = cur.next
+            count += 1
+        prev.next = ref
+        print(prev, prev.next, prev.next.next)
+
+    def cycle_detection(self):
+        cur_slow = self.head
+        cur_fast = self.head
+        count = 0
+        while cur_slow and cur_fast and cur_fast.next:
+            cur_slow = cur_slow.next
+            cur_fast = cur_fast.next.next
+            if cur_slow == cur_fast:
+                break
+        if cur_fast is None:
+            return Node(-1)
+        else:
+            cur_fast = self.head
+            while cur_fast is not cur_slow:
+                count += 1
+                cur_slow = cur_slow.next
+                cur_fast = cur_fast.next.next
+            return Node(count)
+
 
 x = Linklist()
 t = map(int, input().split())
 for y in t:
     x.add_Forward(y)
-print("Display Linked List", x.print_LinkedList())
-print("Linked List Reversal", x.reverse_LinkedList())
+x.print_LinkedList()
+"""x.reverse_LinkedList()
+x.print_LinkedList()"""""
 print("Length of Linked List", x.length_LinkedList())
 print("Middle element of Linked List", x.middle_LinkedList())
 number = int(input("Enter the number to be deleted from Linked List\n"))
-print(x.deletion_fromLinkedList(number))
+x.deletion_fromLinkedList(number)
+print(x.cycle_detection())
+pos = int(input("Enter the position index base(1) where loop formation take place:\n"))
+x.cycle_formation(pos)  # base assume to index = 1
+print(x.cycle_detection())
+"""print("The cycle in the linked list at:", x.cycle_detection(x).data)"""
+
+
+
+
 
 """ 
 z = Linklist()
